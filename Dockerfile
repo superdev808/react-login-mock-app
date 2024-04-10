@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 
 ############ Build React Project ###################
 # Use Node.js LTS version
-FROM node:${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}-alpine as build
 
 # Create app directory
 WORKDIR /app
@@ -24,11 +24,8 @@ RUN npm run build
 ############ Run Nginx ###################
 FROM nginx:alpine
 
-# Copy the Nginx configuration file
+COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-
-# Set the user and group for the Nginx process
-USER nginx
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
