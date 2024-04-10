@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
-    command: npm run build && serve -s build
     ports:
       - "3000:3000"
 
