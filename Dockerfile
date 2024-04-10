@@ -2,6 +2,7 @@ ARG NODE_VERSION=18.5.0
 
 FROM ubuntu:22.04
 
+############ Build React Project ###################
 # Use Node.js LTS version
 FROM node:${NODE_VERSION}-alpine
 
@@ -17,8 +18,17 @@ RUN npm install
 # Copy the entire app directory
 COPY . .
 
-# Expose the port
-EXPOSE 3000
+RUN npm run build
 
-# Start the app
-CMD ["npm", "start"]
+
+############ Run Nginx ###################
+FROM nginx:alpine
+
+# Copy the Nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Set the user and group for the Nginx process
+USER nginx
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
